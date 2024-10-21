@@ -1,16 +1,28 @@
 package com.juanmi_roig;
 
 import java.util.Scanner;
-import java.util.TreeSet;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.util.ArrayList;
+import com.thoughtworks.xstream.XStream;;
 
 public class Agenda {
-    
-    private TreeSet<Contact> contacts = new TreeSet<Contact>();
 
-    public String addContact() { //Add a new contact
+    private ArrayList<Contact> contacts = new ArrayList<Contact>();
+    XStream streamx = new XStream();
+    File contactsFile = new File("contacts.xml");
 
-        Scanner input = new Scanner(System.in);
-        
+    /**
+     * Creates a new contact "c" and adds it to the TreeSet "contacts"
+     * 
+     * @return "New contact -> " + c.toString()
+     */
+    public String addContact() { // * Add a new contact
+
+        @SuppressWarnings("resource")
+        Scanner inputString = new Scanner(System.in);
+
         String msg = "New contact -> ";
 
         Contact c;
@@ -18,48 +30,93 @@ public class Agenda {
         String name = "";
         String lastName = "";
         boolean hasLastName;
-        int number = -1;
+        String phoneNumber;
+        int number;
 
-        do { //Add name to the contact, it's required
-            System.out.print("Name: " );
-            name = input.nextLine();
+        do { // Add name to the contact, it's required
+            System.out.print("Name: ");
+            name = inputString.nextLine();
             if (name.length() == 0) {
                 System.out.println("Name is a required field.");
             }
         } while (name.length() == 0);
-        msg += "Name: " + name + " // ";
 
-        System.out.print("Last name: "); //Add lastName to the contact, it's not required
-        lastName = input.nextLine();
+        System.out.print("Last name: "); // Add lastName to the contact, it's not required
+        lastName = inputString.nextLine();
         if (lastName.length() == 0) {
-            msg += "Last name: ----- // ";
             hasLastName = false;
         } else {
-            msg += "Last name: " + lastName + " // ";
             hasLastName = true;
         }
 
-        do { //Add number to the contact, it's required
+        do { // Add number to the contact, it's required
             System.out.print("Number: ");
-            number = input.nextInt();
+            phoneNumber = inputString.nextLine();
+            number = Integer.parseInt(phoneNumber);
             if (number <= 0) {
-                System.out.println("Unvalid name.");
+                System.out.println("Unvalid number.");
             }
         } while (number <= 0);
-        msg += "Number: " + number;
-
-        input.close();
 
         if (hasLastName) {
-            c = new Contact(name, number);
+            c = new Contact(name, lastName, phoneNumber);
         } else {
-            c = new Contact(name, lastName, number);
+            c = new Contact(name, phoneNumber);
         }
 
-        contacts.add(c);
+        if (contacts.size() == 0) {
+            contacts.add(c);
+            msg += c.toString();
+        } else {
+            for (Contact contact : contacts) {
+                if (contact.getPhoneNumber().equals(c.getPhoneNumber())) {
+                    msg += "This number is already registered";
+                } else {
+                    contacts.add(c);
+                    msg += c.toString();
+                    break;
+                }
+            }
+        }
 
         return msg;
 
+    }
+
+    /**
+     * Shows a list of all contacts, it takes the info from the "contacts" TreeSet
+     * 
+     * @return a String with the list of all contacts
+     */
+    public String showContacts() {
+
+        String msg = "";
+
+        for (Contact contact : contacts) {
+            msg += contact.toString() + "\n";
+        }
+
+        return msg;
+
+    }
+
+    /**
+     * Saves all contacts on a XML file
+     * 
+     * @return if it has been saved or not
+     */
+    public String saveAndExit() { // TODO Correct
+        streamx.allowTypes(new Class[] {Contact.class});
+        try {
+            streamx.toXML(contacts, new FileOutputStream("contacts.xml"));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return "Saved.";
+    }
+
+    public void read() { //TODO Correct
+        contacts = (ArrayList<Contact>)streamx.fromXML("contacts.xml");
     }
 
 }

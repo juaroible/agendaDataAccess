@@ -1,21 +1,40 @@
 package com.juanmi_roig;
 
-public class Contact {
+public class Contact implements Comparable<Contact> {
     
     private String name;
     private String lastName;
-    private int number;
+    private String phoneNumber;
 
 
-    public Contact(String name, int number) { //If lastName is no definied by the user
+    public Contact(String name, String phoneNumber) {
         this.name = name;
-        this.number = number;
+        this.phoneNumber = phoneNumber;
     }
 
-    public Contact(String name, String lastName, int number) { //If lastName is definied by the user
+    public Contact(String name, String lastName, String phoneNumber) {
         this.name = name;
         this.lastName = lastName;
-        this.number = number;
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    @Override
+    public String toString() {
+
+        if (this.lastName == null) {
+            return "Name = " + name + ", Last Name = " + "- " + ", Number = " + phoneNumber;
+        } else {
+            return "Name = " + name + ", Last Name = " + lastName + ", Number = " + phoneNumber;   
+        }
+    }
+
+    @Override
+    public int compareTo(Contact o) {
+        return this.name.compareTo(o.name);
     }
 
 }
