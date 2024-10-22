@@ -105,18 +105,34 @@ public class Agenda {
      * 
      * @return if it has been saved or not
      */
-    public String saveAndExit() { // TODO Correct
-        streamx.allowTypes(new Class[] {Contact.class});
+    public String saveAndExit() {
+        streamx.allowTypes(new Class[] {Contact.class}); //Allows XStream to work with Contact class.
         try {
-            streamx.toXML(contacts, new FileOutputStream("contacts.xml"));
+            FileOutputStream fos = new FileOutputStream(contactsFile); //Opens a FOS for writting
+            streamx.toXML(contacts, fos); //Transforms the ArrayList contacts into a XML file using FOS
         } catch (FileNotFoundException e) {
             e.printStackTrace();
+            return "Failed to save.";
         }
         return "Saved.";
     }
 
-    public void read() { //TODO Correct
-        contacts = (ArrayList<Contact>)streamx.fromXML("contacts.xml");
+    /**
+     * Charges the XML file into the ArrayList contacts
+     */
+    @SuppressWarnings("unchecked")
+    public void read() {
+        streamx.allowTypes(new Class[]{Contact.class}); 
+        if (contactsFile.exists()) {
+            try {
+                contacts = (ArrayList<Contact>)streamx.fromXML(contactsFile); //Transforms the XML file into an ArrayList<Contact> Object and casts it into the ArrayList contacts
+            } catch (Exception e) {
+                e.printStackTrace();
+                contacts = new ArrayList<>(); //Creates a new ArrayList for avoiding future problems
+            }
+        } else {
+            contacts = new ArrayList<>();
+        }
     }
 
 }
