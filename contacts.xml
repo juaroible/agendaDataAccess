@@ -1,0 +1,16 @@
+<list>
+  <com.juanmi__roig.Contact>
+    <name>Juanmi</name>
+    <lastName>Roig</lastName>
+    <phoneNumber>1234</phoneNumber>
+  </com.juanmi__roig.Contact>
+  <com.juanmi__roig.Contact>
+    <name>Pepe</name>
+    <lastName>Sanchez</lastName>
+    <phoneNumber>12345</phoneNumber>
+  </com.juanmi__roig.Contact>
+  <com.juanmi__roig.Contact>
+    <name>Jose</name>
+    <phoneNumber>123456</phoneNumber>
+  </com.juanmi__roig.Contact>
+</list>
